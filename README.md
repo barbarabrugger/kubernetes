@@ -11,7 +11,7 @@ https://www.youtube.com/watch?v=1SaPfm96lY4&t=700s&ab_channel=thenativewebGmbH
 |AWS|Grösster Funktionsumfang|Preis, Firmenphilosophie|[Website](https://azure.microsoft.com/de-de/)|
 |Azure|Nahtlose Integration mit weiteren MS Produkten|Preis(?)|[Website](https://aws.amazon.com)|
 |Digital Ocean|Preis im Vergleich mit AWS/Azure|Keine Server in der Schweiz, Stabilität|[Website](https://www.digitalocean.com/)|
-|Google Cloud Platform|||[Website](https://cloud.google.com/)|
+|Google Cloud Platform|Preis bei Pay-as-you-go Lösungen|Keine dedizierten Schweizer Server|[Website](https://cloud.google.com/)|
 
 ## Tools
 
@@ -20,6 +20,8 @@ https://www.youtube.com/watch?v=1SaPfm96lY4&t=700s&ab_channel=thenativewebGmbH
 ### kubectl
 
 kubectl wird benötigt um den Cluster via Kommandozeile zu steuern | [Download](https://kubernetes.io/de/docs/tasks/tools/install-kubectl/)
+
+Die Konfigurationsdatei für die Verbindung zur Cloud kann heruntergeladen und im Userverzeichnis /.kube hinterlegt werden.
 
 ### dotctl
 
