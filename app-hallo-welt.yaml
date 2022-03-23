@@ -1,0 +1,93 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hallo-welt
+  namespace: website
+  annotations:
+    author: Barbara Brugger <barbara.brugger@qualiflex.solutions>
+spec:
+  replicas: 3 #Anzahl redundanter Pods
+  strategy:
+    type: RollingUpdate #Update geschieht rollend, einer nach dem anderen
+    rollingUpdate:
+      maxSurge: 1 #Anzahl max zusätzlicher Pod beim Deployment (scheint aktuell bei DO nicht zu funktionieren?)
+      maxUnavailable: 1 #Max nicht erreichbare Pods während dem Deployment
+  selector:
+    matchLabels:
+      app: hallo-welt #Welches Template soll deployed werden
+  template:
+    metadata:
+      labels:
+        app: hallo-welt
+      annotations:
+        author: Barbara Brugger <barbara.brugger@qualiflex.solutions>
+    spec:
+      containers:
+        - name: hallo-welt
+          image: goloroden/hello-world:latest #Container Image
+          env:
+          - name: MESSAGE #Umgebungsvariable für Begrüssungsnachricht
+            value: "The simple things in life are free!"
+          ports:
+            - name: http
+              containerPort: 3000
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m" #Max verfügbare CPU pro POD. Wenn ausgereizt verlangsamt sich die Anwendung
+              memory: "512Mi" #Max verfügbares Memory pro POD. Wenn ausgereizt, stürzt der POD ab (Memory leak prevention)
+          readinessProbe: #Test ob Pod bereit ist
+            httpGet: #Simpler Test via HTTP Request auf root path
+              path: /
+              port: http
+            initialDelaySeconds: 10 #Verzögerung bis zur Durchführung der probe
+          livenessProbe: #Test ob Pod läuft
+            httpGet: #Simpler Test via HTTP Request auf root path
+              path: /
+              port: http
+            initialDelaySeconds: 10 #Verzögerung bis zur Durchführung der probe
+      # imagePullSecrets: Zur Verfügung stehende Secrets
+      # - name: docker-hub (definiert in login-to-docker.sh)
+---
+#Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: hallo-welt #Servicename für Zugriff von aussen
+  namespace: website
+spec:
+  selector:
+    app: hallo-welt
+  ports: #Port mapping von aussen
+    - name: http
+      port: 80
+      targetPort: http
+---
+# Ingress Controller
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hallo-welt
+  namespace: website
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+      - helloworld.ddd-k8s.abc-dev.ch
+      secretName: hallo-welt
+  rules:
+    - host: helloworld.ddd-k8s.abc-dev.ch #URL unter welcher der Service erreichbar ist (A Records müssen beim DNS Provider konfiguriert werden für <URL> und *.<URL>)
+      http:
+        paths:
+        - path: / #Alle Pfade unterhalb des Hosts werden via diesen Reverse Proxy geleitet
+          pathType: Prefix
+          backend:
+            service:
+              name: hallo-welt
+              port:
+                name: http
