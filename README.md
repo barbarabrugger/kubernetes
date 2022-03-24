@@ -21,7 +21,7 @@ https://www.youtube.com/watch?v=1SaPfm96lY4&t=700s&ab_channel=thenativewebGmbH
 
 kubectl wird benötigt um den Cluster via Kommandozeile zu steuern | [Download](https://kubernetes.io/de/docs/tasks/tools/install-kubectl/)
 
-Die Konfigurationsdatei für die Verbindung zur Cloud kann heruntergeladen und im Userverzeichnis /.kube hinterlegt werden.
+Die Konfigurationsdatei für die Verbindung zur Cloud kann beim jeweiligen Cloudanbieter heruntergeladen und im Userverzeichnis /.kube hinterlegt werden.
 
 ### dotctl
 
