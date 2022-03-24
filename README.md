@@ -1,4 +1,4 @@
-# Developers Deep Dive zum Thema Kubernetes von the native web
+# Kubernetes Tutorial (the native web)
 
 ## Link zum Tutorial
 
